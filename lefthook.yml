@@ -1,0 +1,34 @@
+pre-commit:
+  piped: true
+  commands:
+    lint-preview:
+      tags: lint
+      glob: "*.dart"
+      run: dart fix lib --dry-run
+    fix_code:
+      tags: lint
+      glob: "*.dart"
+      run: dart fix lib --apply && git add {staged_files}
+    pretty:
+      glob: "*.dart"
+      run: dart format {staged_files} && git add {staged_files}
+    linter:
+        run: flutter analyze
+    static_code_analyser:
+      tags: analyze, dart_code_metrics
+      run: flutter pub run dart_code_metrics:metrics analyze lib
+    unnecessary-null-check:
+      tags: analyze, dart_code_metrics
+      run: flutter pub run dart_code_metrics:metrics check-unnecessary-nullable lib
+    unused-files-check:
+      tags: analyze, dart_code_metrics
+      run: flutter pub run dart_code_metrics:metrics check-unused-files lib
+    unused-code-check:
+      tags: analyze, dart_code_metrics
+      run: flutter pub run dart_code_metrics:metrics check-unused-code lib
+
+post-merge:
+  commands:
+    1_get_packages:
+      tags: pubget
+      run: flutter pub get
