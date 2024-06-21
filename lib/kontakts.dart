@@ -10,10 +10,12 @@ class Kontacts extends StatelessWidget {
         theme: ThemeData(
           fontFamily: "Poppins",
           useMaterial3: true,
+          brightness: Brightness.light,
         ),
         darkTheme: ThemeData(
           fontFamily: "Poppins",
           useMaterial3: true,
+          brightness: Brightness.dark,
         ),
         debugShowCheckedModeBanner: false,
         routerConfig: GoRoutes.goRouter,
