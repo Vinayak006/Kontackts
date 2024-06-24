@@ -1,5 +1,4 @@
 import "../../core/resources/data_state.dart";
-import "../../core/services/permission_service.dart";
 import "../../domain/repositories/contact_repository.dart";
 import "../models/contact_model.dart";
 import "../services/contact_api_service.dart";
@@ -12,9 +11,10 @@ class ContactRepositoryImpl implements ContactRepository {
 
   @override
   Future<DataState<List<ContactModel>>> getContacts() async {
-    if (await PermissionService().requestContactPermission()) {
+    try {
       return _apiService.getContacts();
+    } catch (e) {
+      return DataFailed<List<ContactModel>>(error: e.toString());
     }
-    return DataFailed<List<ContactModel>>(error: "Permission rejected");
   }
 }
