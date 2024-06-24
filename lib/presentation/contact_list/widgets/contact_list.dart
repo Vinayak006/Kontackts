@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
-import "package:gap/gap.dart";
-import "package:icons_plus/icons_plus.dart";
+import "package:nb_utils/nb_utils.dart";
 
 import "../../../domain/entities/contact_entity.dart";
-import "../../../domain/entities/phone_entity.dart";
 import "../bloc/contact_list_bloc.dart";
 import "contact_avatar.dart";
+import "contact_info.dart";
 import "highlighted_text.dart";
 
 class ContactList extends StatefulWidget {
@@ -37,6 +36,7 @@ class _ContactListState extends State<ContactList> {
                       child: FadeInAnimation(
                         child: ListTile(
                           onTap: () async {
+                            hideKeyboard(context);
                             await showModalBottomSheet(
                               context: context,
                               builder: (final BuildContext context) =>
@@ -59,6 +59,7 @@ class _ContactListState extends State<ContactList> {
                 final ContactEntity contact = state.contacts.elementAt(index);
                 return ListTile(
                   onTap: () async {
+                    hideKeyboard(context);
                     await showModalBottomSheet(
                       context: context,
                       builder: (final BuildContext context) =>
@@ -89,67 +90,4 @@ class _ContactListState extends State<ContactList> {
       BlocProvider.of<ContactListBloc>(context).add(GetContactListEvent());
     });
   }
-}
-
-class ContactInfo extends StatelessWidget {
-  const ContactInfo({
-    required this.contact,
-    super.key,
-  });
-
-  final ContactEntity contact;
-
-  @override
-  Widget build(final BuildContext context) => SizedBox(
-        width: double.maxFinite,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: Column(
-                  children: <Widget>[
-                    ContactAvatar(
-                      size: 50,
-                      avatar: contact.thumbnail,
-                    ),
-                    Text(
-                      contact.name,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
-                ),
-              ),
-              const Gap(6),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  children: contact.phone
-                      .map(
-                        (final PhoneEntity phone) => ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          trailing: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Iconsax.call_outline),
-                          ),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(phone.label),
-                              Text(
-                                phone.number,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 }
